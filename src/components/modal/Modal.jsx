@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ModalOverlay, ModalDiv } from './Modal.Styled';
+import PropTypes from 'prop-types';
 
 class Modal extends Component {
   onBackDropClick = e => {
@@ -32,3 +33,7 @@ class Modal extends Component {
 }
 
 export default Modal;
+
+Modal.propTypes = {
+  children: PropTypes.node,
+};
