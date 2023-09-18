@@ -6,6 +6,7 @@ import {
   ButtonLable,
   Button,
 } from './Header.styled';
+import PropTypes from 'prop-types';
 
 export class Header extends Component {
   state = {
@@ -25,10 +26,10 @@ export class Header extends Component {
 
   render() {
     return (
-      <HeaderWrapper className="searchbar">
-        <HeaderForm className="form" onSubmit={this.handleSubmit}>
-          <Button className="button">
-            <ButtonLable className="button-label">Search</ButtonLable>
+      <HeaderWrapper>
+        <HeaderForm onSubmit={this.handleSubmit}>
+          <Button>
+            <ButtonLable>Search</ButtonLable>
           </Button>
 
           <InputFiled
@@ -46,3 +47,7 @@ export class Header extends Component {
     );
   }
 }
+
+Header.propTypes = {
+  newQuerry: PropTypes.func,
+};

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Header } from './header/Header';
 import { PictureList } from './picturesList/PictureList';
 import { AddMoreButton } from './addMoreButton/AddMoreButton';
-import { getProducts } from './helpers/pixabayAPI';
+import { getProducts } from '../helpers/pixabayAPI';
 import Modal from './modal/Modal';
 import { FidgetSpinner } from 'react-loader-spinner';
 import { Wrapper, Loader } from './Pictures.styled';
@@ -10,9 +10,8 @@ import { Wrapper, Loader } from './Pictures.styled';
 export class Pictures extends Component {
   state = {
     hits: [],
-    per_page: 4,
-    initial: 12,
-    step: 8,
+    per_page: 12,
+    step: 1,
     page: 1,
     q: '',
     isOpen: false,
@@ -22,13 +21,14 @@ export class Pictures extends Component {
   };
 
   changeQuerry = name => {
-    const { initial } = this.state;
-    this.setState({ q: name, per_page: initial });
+    this.setState({ q: name });
     console.log(this.state.q);
   };
 
   onLoadMore = () => {
-    this.setState(prev => ({ per_page: prev.per_page + this.state.step }));
+    this.setState(prev => ({
+      per_page: prev.per_page + this.state.step,
+    }));
     console.log('Hi');
   };
 
@@ -61,7 +61,8 @@ export class Pictures extends Component {
   }
 
   render() {
-    const { hits, isOpen, currentImg, currentTitle, loading } = this.state;
+    const { hits, per_page, isOpen, currentImg, currentTitle, loading } =
+      this.state;
     return (
       <Wrapper>
         <Header newQuerry={this.changeQuerry} />
@@ -81,7 +82,7 @@ export class Pictures extends Component {
               />
             </Loader>
           )}
-          {hits.length !== 0 ? (
+          {hits.length !== 0 && hits.length > per_page - 1 ? (
             <AddMoreButton loadMore={this.onLoadMore} />
           ) : null}
           {isOpen && (
