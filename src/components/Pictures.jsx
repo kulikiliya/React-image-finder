@@ -18,16 +18,17 @@ export class Pictures extends Component {
     currentImg: null,
     currentTitle: null,
     loading: false,
+    totalHits: '',
   };
 
   changeQuerry = name => {
-    this.setState({ q: name });
+    this.setState({ q: name, hits: [] });
     console.log(this.state.q);
   };
 
   onLoadMore = () => {
     this.setState(prev => ({
-      per_page: prev.per_page + this.state.step,
+      page: prev.page + this.state.step,
     }));
     console.log('Hi');
   };
@@ -41,15 +42,15 @@ export class Pictures extends Component {
   };
 
   fetchData = async (per_page, page, q) => {
-    const { hits } = await getProducts({ per_page, page, q });
+    const { hits, totalHits } = await getProducts({ per_page, page, q });
     console.log(hits);
-    this.setState({ hits });
+    this.setState(prev => ({ hits: [...prev.hits, ...hits], totalHits }));
   };
 
   async componentDidUpdate(_, prevState) {
     const { per_page, page, q } = this.state;
 
-    if (prevState.q !== q || prevState.per_page !== per_page) {
+    if (prevState.q !== q || prevState.page !== page) {
       this.setState({ loading: true });
       try {
         await this.fetchData(per_page, page, q);
@@ -61,7 +62,7 @@ export class Pictures extends Component {
   }
 
   render() {
-    const { hits, per_page, isOpen, currentImg, currentTitle, loading } =
+    const { hits, totalHits, isOpen, currentImg, currentTitle, loading } =
       this.state;
     return (
       <Wrapper>
@@ -82,7 +83,7 @@ export class Pictures extends Component {
               />
             </Loader>
           )}
-          {hits.length !== 0 && hits.length > per_page - 1 ? (
+          {hits.length !== 0 && hits.length < totalHits ? (
             <AddMoreButton loadMore={this.onLoadMore} />
           ) : null}
           {isOpen && (
